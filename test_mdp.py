@@ -1,6 +1,7 @@
 from unittest import TestCase
 import mdp
 
+
 class TestMDP(TestCase):
     def test_init(self):
         m = mdp.MDP(mapfile='rnGraph')
@@ -22,4 +23,4 @@ class TestMDP(TestCase):
         m.utilities["8"] = 0.13
         m.utilities["9"] = -0.07
         m.computePolicy()
-        ## should generate the same policy as in slide 73
+        # should generate the same policy as in slide 73

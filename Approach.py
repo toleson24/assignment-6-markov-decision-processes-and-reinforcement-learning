@@ -25,6 +25,7 @@ def approach(n) :
         # Continue playing until the game is done.
         # If you win, reward = 1.
         # If you lose, reward = 0.
-        ## Use Q-learning to update the q-table for each state-action pair visited.
+        # Use Q-learning to update the q-table for each state-action pair visited.
+        pass
 
-    ## After 100000 iterations, print out your q-table.
+    # After 100000 iterations, print out your q-table.
