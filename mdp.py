@@ -30,9 +30,36 @@ class MDP:
     # return the policy, represented as a dictionary mapping states to actions, for the current utilities.
     # you do this.
     def computePolicy(self):
-        pass
+        policy = {state: None for state in self.states}
+        for state in self.states:
+            best_action = None
+            best_utility = -2
+
+            for action in self.actions:
+                neighbors = self.transition_probs.get((state, action), [])
+                expected_utility = 0
+
+                for neighbor in neighbors:
+                    expected_utility += float(self.utilities[neighbor[1]]) * float(neighbor[0])
+
+                    if expected_utility > best_utility:
+                        best_utility = expected_utility
+                        best_action = action
+
+            policy[state] = best_action
+
+        return policy
+    # def computePolicy(self):
+    #     policy = defaultdict(str)
+    #     for state in self.states:
+    #         policy[state] = None
+    #     for utility in self.utilities.keys():
+    #
+    #         policy[utility] = self.transition_probs.get()
+    #     return policy
 
     # for a state, compute its expected utility
+
     def computeEU(self, state):
         # are we at a goal?
         for goal in self.goals:
