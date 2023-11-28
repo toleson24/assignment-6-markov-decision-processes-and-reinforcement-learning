@@ -27,8 +27,6 @@ class MDP:
     def __repr__(self):
         return f"Gamma: {self.gamma}, Error: {self.error}, Reward: {self.reward}, Goals: {self.goals}, Transitions: {self.transition_probs}, States: {self.states}, Actions: {self.actions}"
 
-    # return the policy, represented as a dictionary mapping states to actions, for the current utilities.
-    # you do this.
     def computePolicy(self):
         policy = {state: None for state in self.states}
         for state in self.states:
@@ -49,16 +47,6 @@ class MDP:
             policy[state] = best_action
 
         return policy
-    # def computePolicy(self):
-    #     policy = defaultdict(str)
-    #     for state in self.states:
-    #         policy[state] = None
-    #     for utility in self.utilities.keys():
-    #
-    #         policy[utility] = self.transition_probs.get()
-    #     return policy
-
-    # for a state, compute its expected utility
 
     def computeEU(self, state):
         # are we at a goal?
