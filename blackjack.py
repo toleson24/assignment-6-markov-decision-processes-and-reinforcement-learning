@@ -58,8 +58,8 @@ def get_player_action(done, obs, env):
 
 def calculate_scores(obs1, obs2, score1, score2):
     print(f"ai score: {obs1[0]} \nyour score: {obs2[0]}")
-    if obs1[0] > 21 & obs2[0] > 21:
-        pass
+    if obs1[0] > 21 and obs2[0] > 21:
+        print("both busted")
     elif obs1[0] > 21:
         print("ai busted; you won")
         score2 += 2
