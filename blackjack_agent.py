@@ -9,15 +9,11 @@
 #       8) loses
 #       9) other plays until has over 21 (loses) or wins (21, or closer to 21 than other)
 
-# from a06_q03 import BlackjackAgent
 from __future__ import annotations
 
 from collections import defaultdict
 
-import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
-from matplotlib.patches import Patch
 from tqdm import tqdm
 
 import gymnasium as gym
@@ -27,11 +23,13 @@ N_EPISODES = 100_000
 START_EPSILON = 1.0
 EPSILON_DECAY = START_EPSILON / (N_EPISODES / 2)
 FINAL_EPSILON = 0.1
+ENV = gym.make("Blackjack-v1", sab=True)
 
 
 class BlackjackAgent:
     def __init__(
         self,
+        env,
         learning_rate: float,
         initial_epsilon: float,
         epsilon_decay: float,
@@ -48,7 +46,8 @@ class BlackjackAgent:
             final_epsilon: The final epsilon value
             discount_factor: The discount factor for computing the Q-value
         """
-        self.q_values = defaultdict(lambda: np.zeros(env.action_space.n))
+        self.env = env
+        self.q_values = defaultdict(lambda: np.zeros(self.env.action_space.n))
 
         self.lr = learning_rate
         self.discount_factor = discount_factor
@@ -66,7 +65,7 @@ class BlackjackAgent:
         """
         # with probability epsilon return a random action to explore the environment
         if np.random.random() < self.epsilon:
-            return env.action_space.sample()
+            return self.env.action_space.sample()
 
         # with probability (1 - epsilon) act greedily (exploit)
         else:
@@ -99,17 +98,18 @@ class BlackjackAgentTrained(BlackjackAgent):
 
     def __init__(
             self,
+            env=ENV,
             learning_rate=LEARNING_RATE,
             initial_epsilon=N_EPISODES,
             epsilon_decay=EPSILON_DECAY,
             final_epsilon=FINAL_EPSILON
     ):
-        super().__init__(learning_rate, initial_epsilon, epsilon_decay, final_epsilon)
+        super().__init__(env, learning_rate, initial_epsilon, epsilon_decay, final_epsilon)
 
     def train(self):
         env = gym.make("Blackjack-v1", sab=True)
-        env = gym.wrappers.RecordEpisodeStatistics(env, deque_size=self.n_episodes)
-        for episode in tqdm(range(self.n_episodes)):
+        env = gym.wrappers.RecordEpisodeStatistics(env, deque_size=N_EPISODES)
+        for _ in tqdm(range(N_EPISODES)):
             obs, info = env.reset()
             done = False
 
@@ -126,4 +126,4 @@ class BlackjackAgentTrained(BlackjackAgent):
                 obs = next_obs
 
             self.decay_epsilon()
-        env.close()
+        self.env.close()
