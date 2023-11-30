@@ -1,4 +1,6 @@
+import math
 from collections import defaultdict
+import random
 
 
 # transitions
@@ -26,6 +28,9 @@ class MDP:
 
     def __repr__(self):
         return f"Gamma: {self.gamma}, Error: {self.error}, Reward: {self.reward}, Goals: {self.goals}, Transitions: {self.transition_probs}, States: {self.states}, Actions: {self.actions}"
+
+    def get_utilities(self):
+        return f"Utilities: {self.utilities}"
 
     def computePolicy(self):
         policy = {state: None for state in self.states}
@@ -60,7 +65,7 @@ class MDP:
             eu = 0.0
             destinations = self.transition_probs[(state, action)]
             for d in destinations:
-                eu += self.utilities[d[1]] * float(d[0])
+                eu += float(self.utilities[d[1]]) * float(d[0])
             if eu >= best_eu:
                 best_action = action
                 best_eu = eu
@@ -73,10 +78,19 @@ class MDP:
     #           compute its new EU
     #     update all values
     #  while any EU changes by more than delta = (1-error)/error
-    #
-
     def value_iteration(self):
-        pass
+        for u in self.utilities.keys():
+            self.utilities[u] = random.random()  # .uniform(-1, 1)
+        eu_changed = True
+        while eu_changed:
+            for state in self.states:
+                eu = float(self.utilities[state])
+                new_eu = float(self.computeEU(state))
+                if abs(eu - new_eu) < ((1 - self.error) / self.error):
+                    eu_changed = False
+            if not eu_changed:
+                break
+        return self.computePolicy()
 
     # you do this one.
     # 1. Set all utilities to zero.
@@ -85,9 +99,18 @@ class MDP:
     #    given the policy, update the utilities.
     #    call computePolicy to get the policy for these utilities.
     # while: any part of the policy changes.
-
     def policy_iteration(self):
-        pass
+        for state in self.states:
+            self.utilities[state] = 0.0
+        policy = self.computePolicy()
+        while True:
+            for state in self.states:
+                self.utilities[state] = self.computeEU(state)
+            updated_policy = self.computePolicy()
+            if updated_policy == policy:
+                break
+            policy = updated_policy
+        return policy
 
 
 def load_map_from_file(fname):
