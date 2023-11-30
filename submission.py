@@ -1,5 +1,7 @@
 from mdp import load_map_from_file, MDP
 from Approach import approach
+from blackjack_agent import BlackjackAgentTrained
+from blackjack import play_blackjack
 
 FILENAME = "rnGraph"
 
@@ -29,3 +31,9 @@ if __name__ == "__main__":
     print(t10)
     # print(t12)
     # print(t18)
+
+    print("\nblackjack")
+    computer_agent = BlackjackAgentTrained()
+    play_blackjack(computer_agent)
+
+
